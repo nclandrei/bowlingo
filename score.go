@@ -18,18 +18,26 @@ func CalculateScore(frames []Frame) (*int, error) {
 	if framesCount > 10 {
 		return nil, fmt.Errorf("there should be maximum 10 frames")
 	}
-	for i := 1; i < framesCount; i++ {
-		if IsStrike(frames[i-1]) {
-			score += s
+	for i := 0; i < framesCount-1; i++ {
+		if isStrike(frames[i]) {
+			score += 10 + frameScore(frames[i+1])
+		} else if isSpare(frames[i]) {
+			score += 10 + frames[i+1].FirstRoll
+		} else {
+			score += frameScore(frames[i])
 		}
 	}
 	return &score, nil
 }
 
-func IsStrike(frame Frame) bool {
+func isStrike(frame Frame) bool {
 	return frame.FirstRoll == 10
 }
 
-func IsSpare(frame Frame) bool {
+func isSpare(frame Frame) bool {
 	return frame.FirstRoll+frame.SecondRoll == 10
+}
+
+func frameScore(frame Frame) int {
+	return frame.FirstRoll + frame.SecondRoll
 }
