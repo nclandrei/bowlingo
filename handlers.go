@@ -3,6 +3,7 @@ package bowlingo
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -23,6 +24,25 @@ func Scores() http.Handler {
 			http.Error(w, "Could not unmarshal body to JSON.", http.StatusInternalServerError)
 			return
 		}
-
+		score, err := CalculateScore(frameRequest.Frames)
+		if err != nil {
+			http.Error(w, "Could not calculate total score for the frames.", http.StatusInternalServerError)
+			return
+		}
+		resp, err := json.Marshal(struct {
+			score int
+		}{
+			score: *score,
+		})
+		if err != nil {
+			http.Error(w, "Could not marshal score into a JSON object.", http.StatusInternalServerError)
+			return
+		}
+		_, err = w.Write(resp)
+		if err != nil {
+			log.Printf("could not write score to response: %v", err)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
 	})
 }
