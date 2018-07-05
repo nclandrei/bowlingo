@@ -12,9 +12,24 @@ type Frame struct {
 
 // CalculateScore takes a slice of frames and returns the current score
 // or an error.
-func CalculateScore(frames []Frame) (int, error) {
-	for i := range frames {
-		fmt.Println(i)
+func CalculateScore(frames []Frame) (*int, error) {
+	var score int
+	framesCount := len(frames)
+	if framesCount > 10 {
+		return nil, fmt.Errorf("there should be maximum 10 frames")
 	}
-	return 0, nil
+	for i := 1; i < framesCount; i++ {
+		if IsStrike(frames[i-1]) {
+			score += s
+		}
+	}
+	return &score, nil
+}
+
+func IsStrike(frame Frame) bool {
+	return frame.FirstRoll == 10
+}
+
+func IsSpare(frame Frame) bool {
+	return frame.FirstRoll+frame.SecondRoll == 10
 }
