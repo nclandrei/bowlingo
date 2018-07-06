@@ -1,4 +1,4 @@
-package main
+package bowlingo
 
 import (
 	"fmt"
@@ -68,7 +68,8 @@ func frameScore(frameIndex int, rolls []int) int {
 }
 
 // spareBonus calculates the score to be added to 10 when the
-// player hits a spare in the current frame.
+// player hits a spare in the current frame. Returns nil if there
+// is no extra frame to take the first roll from.
 func spareBonus(frameIndex int, rolls []int) *int {
 	if frameIndex+2 >= len(rolls) {
 		return nil
@@ -77,7 +78,8 @@ func spareBonus(frameIndex int, rolls []int) *int {
 }
 
 // strikeBonus calculates the score to be added to 10 when the
-// player hits a strike in the current frame.
+// player hits a strike in the current frame. Returns nil if the calculator
+// does not have other frames to compute the correct score.
 func strikeBonus(frameIndex int, rolls []int) *int {
 	if frameIndex+2 >= len(rolls) {
 		return nil
@@ -124,4 +126,24 @@ func validateFrame(frameIndex int, frame Frame) error {
 		return fmt.Errorf("bonus roll should not be awarded as the first 2 rolls are neither a spare nor a strike")
 	}
 	return nil
+}
+
+func newFrame(firstRoll, secondRoll int) Frame {
+	return Frame{
+		FirstRoll:  firstRoll,
+		SecondRoll: secondRoll,
+	}
+}
+
+func newFrameSlice(totalPinsPerFrame, noFrames int) []Frame {
+	frames := make([]Frame, noFrames)
+	for i := 0; i < noFrames; i++ {
+		firstRoll := totalPinsPerFrame
+		secondRoll := 0
+		frames[i] = Frame{
+			FirstRoll:  firstRoll,
+			SecondRoll: secondRoll,
+		}
+	}
+	return frames
 }
