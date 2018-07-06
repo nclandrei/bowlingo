@@ -1,0 +1,12 @@
+<form>
+<input name="firstRoll" [(ngModel)]="firstRoll" type="number" min="0" max="10"/>
+<input name="secondRoll" [(ngModel)]="secondRoll" type="number" min="0" max="10"/>
+
+<button (click)="sendScores()">Submit</button>
+</form>
+
+<li *ngFor="let frame of frames">
+  First Roll: {{ frame.FirstRoll }}   ---   Second Roll: {{ frame.SecondRoll }}
+</li>
+
+<h1> Current Score: {{ totalScore }} </h1>
