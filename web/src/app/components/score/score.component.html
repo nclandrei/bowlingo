@@ -3,6 +3,7 @@
 <input name="secondRoll" [(ngModel)]="secondRoll" type="number" min="0" max="10"/>
 
 <button (click)="sendScores()">Submit</button>
+<button (click)="resetGame()">New Game</button>
 </form>
 
 <li *ngFor="let frame of frames">
