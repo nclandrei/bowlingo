@@ -3,20 +3,21 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
 
-// Server defines the server which we'll for our bowling game.
+// Server defines the server which we'll for our bowling game. I followed best
+// practices for structuring the code and the server and its components (for more
+// details, please see here: https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831)
 type Server struct {
-	router *mux.Router
+	router *http.ServeMux
 }
 
 // NewServer returns a new instance of the server.
 func NewServer() *Server {
 	return &Server{
-		router: mux.NewRouter(),
+		router: http.NewServeMux(),
 	}
 }
 
