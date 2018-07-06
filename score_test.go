@@ -10,7 +10,8 @@ func TestFramesToRolls(t *testing.T) {
 	frames = append(frames, newFrame(10, 0), newFrame(7, 3),
 		newFrame(8, 2), newFrame(10, 0))
 	rolls := framesToRolls(frames)
-	expectedRolls := []int{10, 7, 3, 8, 2, 10}
+	expectedRolls := make([]int, 21)
+	copy(expectedRolls[:6], []int{10, 7, 3, 8, 2, 10})
 	assert.Equal(t, len(expectedRolls), len(rolls),
 		"the length of actual and expected rolls should be equal")
 	assert.EqualValues(t, expectedRolls, rolls,
@@ -94,48 +95,47 @@ func TestFrameScore(t *testing.T) {
 func TestSpareBonus(t *testing.T) {
 	t.Run("spare bonus exists", func(t *testing.T) {
 		rolls := []int{5, 5, 3, 2}
-		assert.Equal(t, 3, *spareBonus(0, rolls), "spare bonus should be equal to first roll in the following frame")
+		assert.Equal(t, 3, spareBonus(0, rolls), "spare bonus should be equal to first roll in the following frame")
 	})
 	t.Run("spare bonus does not exist", func(t *testing.T) {
-		rolls := []int{5, 5}
-		assert.Nil(t, spareBonus(0, rolls),
-			"spare bonus should be nil as we cannot calculate it due to no extra frame being available")
+		rolls := make([]int, 21)
+		rolls[0], rolls[1] = 5, 5
+		assert.Zero(t, spareBonus(0, rolls),
+			"spare bonus should be 0 as we cannot calculate it due to no extra frame being available")
 	})
 }
 
 func TestStrikeBonus(t *testing.T) {
 	t.Run("next 2 rolls are in the following frame", func(t *testing.T) {
 		rolls := []int{10, 3, 4}
-		assert.Equal(t, 7, *strikeBonus(0, rolls), "bonus should be calculated with both rolls from following frame")
+		assert.Equal(t, 7, strikeBonus(0, rolls), "bonus should be calculated with both rolls from following frame")
 	})
 	t.Run("next roll strike, second one in the third frame", func(t *testing.T) {
 		rolls := []int{10, 10, 2, 4}
-		assert.Equal(t, 12, *strikeBonus(0, rolls), "bonus should be calculated with a strike and the first roll from third frame")
+		assert.Equal(t, 12, strikeBonus(0, rolls), "bonus should be calculated with a strike and the first roll from third frame")
 	})
 	t.Run("next 2 rolls are strikes", func(t *testing.T) {
 		rolls := []int{10, 10, 10}
-		assert.Equal(t, 20, *strikeBonus(0, rolls), "bonus should be calculated with both strikes as they are the next 2 rolls")
+		assert.Equal(t, 20, strikeBonus(0, rolls), "bonus should be calculated with both strikes as they are the next 2 rolls")
 	})
 	t.Run("cannot calculate strike", func(t *testing.T) {
-		rolls := []int{10}
-		assert.Nil(t, strikeBonus(0, rolls), "cannot calculate bonus as there is no extra frame")
+		rolls := make([]int, maxThrowsPerGame)
+		rolls[0] = 10
+		assert.Zero(t, strikeBonus(0, rolls), "cannot calculate bonus as there is no extra frame")
 	})
 }
 
 func TestScoreOnePinOnEveryFrame(t *testing.T) {
-	frames := newFrameSlice(2, 10)
+	frames := newFrameSlice(1, 10)
 	score, _ := Score(frames)
 	assert.Equal(t, 10, score, "final score should be 10")
 }
 
 func TestScorePerfectGame(t *testing.T) {
-	frames := newFrameSlice(10, 9)
-	bonusRoll := 10
-	frames = append(frames, Frame{
-		FirstRoll:  10,
-		SecondRoll: 10,
-		BonusRoll:  &bonusRoll,
-	})
+	frames := newFrameSlice(10, 10)
+	bonus := 10
+	frames[9].BonusRoll = &bonus
+	frames[9].SecondRoll = 10
 	score, _ := Score(frames)
 	assert.Equal(t, 300, score, "final score should be 300")
 }
