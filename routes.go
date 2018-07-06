@@ -4,5 +4,5 @@ package main
 // the future, it can have multiple ones and it is much easier to follow the
 // code path using this method
 func (s *Server) routes() {
-	s.router.Handle("/api/score", s.ScoreHandler())
+	s.router.Handle("/api/score", s.ScoreHandler()).Methods("POST", "OPTIONS")
 }
