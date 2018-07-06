@@ -47,7 +47,7 @@ func (s *Server) ScoreHandler() http.Handler {
 			return
 		}
 		resp := Response{
-			Score: *score,
+			Score: score,
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(&resp)
