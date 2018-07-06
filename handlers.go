@@ -2,6 +2,7 @@ package bowlingo
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,7 +14,7 @@ func Scores() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		bodyBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			http.Error(w, "Could not read request body.", http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("Could not read request body: %v", err), http.StatusBadRequest)
 			return
 		}
 		var frameRequest struct {
@@ -21,12 +22,12 @@ func Scores() http.Handler {
 		}
 		err = json.Unmarshal(bodyBytes, &frameRequest)
 		if err != nil {
-			http.Error(w, "Could not unmarshal body to JSON.", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Could not unmarshal body to JSON: %v", err), http.StatusInternalServerError)
 			return
 		}
-		score, err := CalculateScore(frameRequest.Frames)
+		score, err := Score(frameRequest.Frames)
 		if err != nil {
-			http.Error(w, "Could not calculate total score for the frames.", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Could not calculate total score for the frames: %v", err), http.StatusInternalServerError)
 			return
 		}
 		resp, err := json.Marshal(struct {
@@ -35,7 +36,7 @@ func Scores() http.Handler {
 			score: *score,
 		})
 		if err != nil {
-			http.Error(w, "Could not marshal score into a JSON object.", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Could not marshal score into a JSON object: %v", err), http.StatusInternalServerError)
 			return
 		}
 		_, err = w.Write(resp)
