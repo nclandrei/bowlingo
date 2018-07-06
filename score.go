@@ -6,18 +6,18 @@ import (
 
 // Frame defines a single frame of two rolls from the user.
 type Frame struct {
-	FirstRoll  int  `json:"first"`
-	SecondRoll int  `json:"second"`
-	BonusRoll  *int `json:"third"`
+	FirstRoll  int  `json:"firstRoll"`
+	SecondRoll int  `json:"secondRoll"`
+	BonusRoll  *int `json:"bonusRoll"`
 }
 
 // Score takes a slice of frames and returns the current score
 // or an error.
-func Score(frames []Frame) (*int, error) {
+func Score(frames []Frame) (int, error) {
 	var score int
 	framesLen := len(frames)
 	if framesLen > 10 {
-		return nil, fmt.Errorf("there should be maximum 10 frames")
+		return score, fmt.Errorf("there should be maximum 10 frames")
 	}
 	rolls := framesToRolls(frames)
 	var frameIndex int
@@ -28,7 +28,7 @@ func Score(frames []Frame) (*int, error) {
 			// the score, we return the current score as we cannot
 			// compute the final one until the other frame(s) are rolled as well
 			if bonus == nil {
-				return &score, nil
+				return score, nil
 			}
 			score += 10 + *bonus
 			frameIndex++
@@ -37,7 +37,7 @@ func Score(frames []Frame) (*int, error) {
 			// same applies to spare: if we do not have any extra frame to add the first roll
 			// to 10, we cannot compute the final score, so we return the current score
 			if bonus == nil {
-				return &score, nil
+				return score, nil
 			}
 			score += 10 + *bonus
 			frameIndex += 2
@@ -46,7 +46,7 @@ func Score(frames []Frame) (*int, error) {
 			frameIndex += 2
 		}
 	}
-	return &score, nil
+	return score, nil
 }
 
 // isStrike checks whether the current frame contains a strike.
@@ -95,7 +95,7 @@ func framesToRolls(frames []Frame) []int {
 		}
 		rolls = append(rolls, f.SecondRoll)
 	}
-	if len(frames) == 10 {
+	if len(frames) == 10 && frames[9].BonusRoll != nil {
 		rolls = append(rolls, *frames[9].BonusRoll)
 	}
 	return rolls
