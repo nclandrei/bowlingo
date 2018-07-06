@@ -23,10 +23,23 @@ func Score(frames []Frame) (*int, error) {
 	var frameIndex int
 	for i := 0; i < framesLen; i++ {
 		if isStrike(frameIndex, rolls) {
-			score += 10 + strikeBonus(frameIndex, rolls)
+			bonus := strikeBonus(frameIndex, rolls)
+			// if we do not have 1 or 2 more frames to calculate
+			// the score, we return the current score as we cannot
+			// compute the final one until the other frame(s) are rolled as well
+			if bonus == nil {
+				return &score, nil
+			}
+			score += 10 + *bonus
 			frameIndex++
 		} else if isSpare(frameIndex, rolls) {
-			score += 10 + spareBonus(frameIndex, rolls)
+			bonus := spareBonus(frameIndex, rolls)
+			// same applies to spare: if we do not have any extra frame to add the first roll
+			// to 10, we cannot compute the final score, so we return the current score
+			if bonus == nil {
+				return &score, nil
+			}
+			score += 10 + *bonus
 			frameIndex += 2
 		} else {
 			score += frameScore(frameIndex, rolls)
@@ -53,20 +66,21 @@ func frameScore(frameIndex int, rolls []int) int {
 
 // spareBonus calculates the score to be added to 10 when the
 // player hits a spare in the current frame.
-func spareBonus(frameIndex int, rolls []int) int {
+func spareBonus(frameIndex int, rolls []int) *int {
 	if frameIndex+2 >= len(rolls) {
-		return 0
+		return nil
 	}
-	return rolls[frameIndex+2]
+	return &rolls[frameIndex+2]
 }
 
 // strikeBonus calculates the score to be added to 10 when the
 // player hits a strike in the current frame.
-func strikeBonus(frameIndex int, rolls []int) int {
+func strikeBonus(frameIndex int, rolls []int) *int {
 	if frameIndex+2 >= len(rolls) {
-		return 0
+		return nil
 	}
-	return rolls[frameIndex+1] + rolls[frameIndex+2]
+	bonus := rolls[frameIndex+1] + rolls[frameIndex+2]
+	return &bonus
 }
 
 // framesToRolls converts a slice of frames to a slice of rolls. This is needed
