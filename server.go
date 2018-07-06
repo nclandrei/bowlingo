@@ -1,4 +1,4 @@
-package main
+package bowlingo
 
 import (
 	"encoding/json"
@@ -19,6 +19,13 @@ func NewServer() *Server {
 	return &Server{
 		router: http.NewServeMux(),
 	}
+}
+
+// ServeHTTP simply allows the bowling server to handle requests by passing
+// them to its internal router. This approach is better than exposing the router
+// to the user who does not need to know or be able to modify the server's components.
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(w, r)
 }
 
 // ScoreHandler defines the handler needed to parse, calculate and return
