@@ -1,4 +1,4 @@
-package bowlingo
+package main
 
 import (
 	"fmt"
@@ -6,9 +6,9 @@ import (
 
 // Frame defines a single frame of two rolls from the user.
 type Frame struct {
-	FirstRoll  int `json:"first"`
-	SecondRoll int `json:"second"`
-	BonusRoll  int `json:"third"`
+	FirstRoll  int  `json:"first"`
+	SecondRoll int  `json:"second"`
+	BonusRoll  *int `json:"third"`
 }
 
 // Score takes a slice of frames and returns the current score
@@ -96,7 +96,7 @@ func framesToRolls(frames []Frame) []int {
 		rolls = append(rolls, f.SecondRoll)
 	}
 	if len(frames) == 10 {
-		rolls = append(rolls, frames[9].BonusRoll)
+		rolls = append(rolls, *frames[9].BonusRoll)
 	}
 	return rolls
 }
