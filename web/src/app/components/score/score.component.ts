@@ -20,11 +20,20 @@ export class ScoreComponent implements OnInit {
 
   private sendScores() {
     const currentFrame: Frame = {
-      FirstRoll: this.firstRoll,
-      SecondRoll: this.secondRoll,
+      firstRoll: this.firstRoll,
+      secondRoll: this.secondRoll,
+      bonusRoll: null,
     };
     this.frames.push(currentFrame);
     this.scoreService.sendFrames(this.frames)
-      .subscribe((resp: any) => this.totalScore = resp.score);
+      .subscribe((resp: any) => {
+        console.log(resp);
+        this.totalScore = resp.score;
+      });
+  }
+
+  private resetGame() {
+    this.frames = [];
+    this.totalScore = 0;
   }
 }

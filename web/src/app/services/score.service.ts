@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ScoreService {
-  private scoreApiEndpoint = 'http://localhost:8000/api/score/';
+  private scoreApiEndpoint = 'http://localhost:8000/api/score';
 
   constructor(private http: HttpClient) { }
 
