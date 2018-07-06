@@ -122,8 +122,20 @@ func TestStrikeBonus(t *testing.T) {
 	})
 }
 
-func TestScoreOnePinOnEveryThrow(t *testing.T) {
-	frames := newFrameSlice(1, 10)
+func TestScoreOnePinOnEveryFrame(t *testing.T) {
+	frames := newFrameSlice(2, 10)
 	score, _ := Score(frames)
-	assert.Equal(t, 20, score, "final score should be 20")
+	assert.Equal(t, 10, score, "final score should be 10")
+}
+
+func TestScorePerfectGame(t *testing.T) {
+	frames := newFrameSlice(10, 9)
+	bonusRoll := 10
+	frames = append(frames, Frame{
+		FirstRoll:  10,
+		SecondRoll: 10,
+		BonusRoll:  &bonusRoll,
+	})
+	score, _ := Score(frames)
+	assert.Equal(t, 300, score, "final score should be 300")
 }
