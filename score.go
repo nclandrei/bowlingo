@@ -22,6 +22,9 @@ func Score(frames []Frame) (int, error) {
 	rolls := framesToRolls(frames)
 	var frameIndex int
 	for i := 0; i < framesLen; i++ {
+		if err := validateFrame(i, frames[i]); err != nil {
+			return score, err
+		}
 		if isStrike(frameIndex, rolls) {
 			bonus := strikeBonus(frameIndex, rolls)
 			// if we do not have 1 or 2 more frames to calculate
@@ -99,4 +102,26 @@ func framesToRolls(frames []Frame) []int {
 		rolls = append(rolls, *frames[9].BonusRoll)
 	}
 	return rolls
+}
+
+// validateFrame takes a frame and its index and performs different validations
+// on the frame and its rolls.
+func validateFrame(frameIndex int, frame Frame) error {
+	if frame.FirstRoll < 0 || frame.FirstRoll > 10 {
+		return fmt.Errorf("invalid value for first roll of the frame")
+	}
+	if frame.SecondRoll < 0 || frame.SecondRoll > 10 {
+		return fmt.Errorf("invalid value for second roll of the frame")
+	}
+	if frame.FirstRoll+frame.SecondRoll > 10 {
+		return fmt.Errorf("sum of rolls must be less than 10")
+	}
+	if frameIndex < 9 && frame.BonusRoll != nil {
+		return fmt.Errorf("only last frame can have a bonus roll")
+	}
+	if frameIndex == 9 && frame.BonusRoll != nil && frame.FirstRoll != 10 &&
+		frame.FirstRoll+frame.SecondRoll != 10 {
+		return fmt.Errorf("bonus roll should not be awarded as the first 2 rolls are neither a spare nor a strike")
+	}
+	return nil
 }
