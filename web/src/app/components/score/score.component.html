@@ -9,12 +9,12 @@
     </div>
 
     <div class="btn-group bowlingo-btn-group" role="group">
-      <button class="btn btn-primary" *ngIf="frames.length < 10" (click)="sendScores()">Send Rolls</button>
+      <button class="btn btn-primary" *ngIf="frames.length < 10 && !error" (click)="sendScores()">Send Rolls</button>
       <button class="btn btn-dark" (click)="resetGame()">New Game</button>
     </div>
 </form>
 
-<div class="scores-container" >
+<div class="scores-container">
   <div class="score-box" *ngFor="let frame of frames; let i = index">
     <div class="frame-number">
       {{ i + 1 }}

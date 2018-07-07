@@ -37,6 +37,7 @@ export class ScoreComponent implements OnInit {
   private resetGame() {
     this.frames = [];
     this.totalScore = 0;
+    this.error = null;
   }
 
   private getRollText(rollIndex: number, frame: Frame) {
