@@ -41,7 +41,6 @@ export class ScoreComponent implements OnInit {
   }
 
   private getRollText(rollIndex: number, frame: Frame) {
-    console.log(frame);
     switch (rollIndex) {
       case 0:
         if (frame.firstRoll === 10) {
@@ -50,10 +49,12 @@ export class ScoreComponent implements OnInit {
           return frame.firstRoll.toString();
         }
       case 1:
-        if (frame.firstRoll === 10) {
+        if (frame.firstRoll === 10 && this.frames.length < 10) {
           return '\u00a0';
         } else if (frame.firstRoll + frame.secondRoll === 10) {
           return '/';
+        } else if (frame.secondRoll === 10 && this.frames.length === 10) {
+          return 'X';
         } else {
           return frame.secondRoll.toString();
         }
