@@ -13,11 +13,12 @@ import (
 	"fmt"
 	"github.com/nclandrei/bowlingo"
 	"github.com/rs/cors"
+	"log"
 	"net/http"
 )
 
 var (
-	address = flag.String("addr", "localhost", "hostname for the bowling server")
+	address = flag.String("addr", "0.0.0.0", "hostname for the bowling server")
 	port    = flag.Int("port", 8000, "port for the bowling server")
 )
 
@@ -25,5 +26,5 @@ func main() {
 	flag.Parse()
 	server := bowlingo.NewServer()
 	server.Routes()
-	http.ListenAndServe(fmt.Sprintf("%s:%d", *address, *port), cors.Default().Handler(server))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", *address, *port), cors.Default().Handler(server)))
 }
