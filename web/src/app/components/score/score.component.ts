@@ -14,10 +14,11 @@ export class ScoreComponent implements OnInit {
   private firstRoll: number;
   private secondRoll: number;
   private bonusRoll: number;
+  private error: any;
 
-  constructor(private scoreService: ScoreService) {}
+  constructor(private scoreService: ScoreService) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   private sendScores() {
     const currentFrame: Frame = {
@@ -29,7 +30,8 @@ export class ScoreComponent implements OnInit {
     this.scoreService.sendFrames(this.frames)
       .subscribe((resp: any) => {
         this.totalScore = resp.score;
-      });
+      },
+      error => this.error = error);
   }
 
   private resetGame() {
@@ -56,9 +58,8 @@ export class ScoreComponent implements OnInit {
         }
       case 2:
         if (this.frames.length < 10) {
-          break;
-        }
-        if (frame.bonusRoll === 10) {
+          return '\u00a0';
+        } else if (frame.bonusRoll === 10) {
           return 'X';
         } else {
           return frame.bonusRoll;

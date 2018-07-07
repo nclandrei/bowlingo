@@ -31,4 +31,6 @@
   </div>
 </div>
 
-<h1 class="bowlingo-score"> Current Score: {{ totalScore }} </h1>
+<h1 class="bowlingo-heading"> Current Score: {{ totalScore }} </h1>
+
+<h3 class="bowlingo-heading bg-danger" *ngIf="error"> {{ error.error }} </h3>
