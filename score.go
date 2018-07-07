@@ -28,7 +28,7 @@ func Score(frames []Frame) (int, error) {
 	rolls := framesToRolls(frames)
 	for frameIndex, rollIndex := 0, 0; frameIndex < framesLen; frameIndex++ {
 		if err := validateFrame(frameIndex, frames[frameIndex]); err != nil {
-			return score, err
+			return score, fmt.Errorf("frame %d is invalid: %v", frameIndex, err)
 		}
 		if isStrike(rollIndex, rolls) {
 			score += totalNumberOfPins + strikeBonus(rollIndex, rolls)
@@ -95,25 +95,27 @@ func framesToRolls(frames []Frame) []int {
 // validateFrame takes a frame and its index and performs different validations
 // on the frame and its rolls.
 func validateFrame(frameIndex int, frame Frame) error {
-	if frame.FirstRoll < 0 || frame.FirstRoll > 10 {
+	if frame.FirstRoll < 0 || frame.FirstRoll > totalNumberOfPins {
 		return fmt.Errorf("invalid value for first roll of the frame")
 	}
-	if frame.SecondRoll < 0 || frame.SecondRoll > 10 {
+	if frame.SecondRoll < 0 || frame.SecondRoll > totalNumberOfPins {
 		return fmt.Errorf("invalid value for second roll of the frame")
 	}
-	if frame.FirstRoll+frame.SecondRoll > 10 {
+	if frame.FirstRoll+frame.SecondRoll > totalNumberOfPins && frameIndex < 9 {
 		return fmt.Errorf("sum of rolls must be less than 10")
 	}
 	if frameIndex < 9 && frame.BonusRoll != nil {
 		return fmt.Errorf("only last frame can have a bonus roll")
 	}
 	if frameIndex == 9 && frame.BonusRoll != nil && frame.FirstRoll != 10 &&
-		frame.FirstRoll+frame.SecondRoll != 10 {
+		frame.FirstRoll+frame.SecondRoll != totalNumberOfPins {
 		return fmt.Errorf("bonus roll should not be awarded as the first 2 rolls are neither a spare nor a strike")
 	}
 	return nil
 }
 
+// newFrame is used for testing purposes in order to create a frame with
+// specified first and second roll.
 func newFrame(firstRoll, secondRoll int) Frame {
 	return Frame{
 		FirstRoll:  firstRoll,
@@ -121,6 +123,8 @@ func newFrame(firstRoll, secondRoll int) Frame {
 	}
 }
 
+// newFrameSlice is used for testing purposes in order to create a slice of frames
+// with the first roll equal to the totalPinsPerFrame defined by the test creator.
 func newFrameSlice(totalPinsPerFrame, noFrames int) []Frame {
 	frames := make([]Frame, noFrames)
 	for i := 0; i < noFrames; i++ {
