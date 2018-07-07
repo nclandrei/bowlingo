@@ -139,3 +139,29 @@ func TestScorePerfectGame(t *testing.T) {
 	score, _ := Score(frames)
 	assert.Equal(t, 300, score, "final score should be 300")
 }
+
+func TestScoreOneSpare(t *testing.T) {
+	frames := newFrameSlice(5, 1)
+	frames = append(frames, Frame{
+		FirstRoll:  5,
+		SecondRoll: 5,
+	}, Frame{
+		FirstRoll:  2,
+		SecondRoll: 0,
+	})
+	score, _ := Score(frames)
+	assert.Equal(t, 19, score, "final score with one spare should be 19")
+}
+
+func TestScoreAllGutter(t *testing.T) {
+	frames := newFrameSlice(0, 10)
+	score, _ := Score(frames)
+	assert.Zero(t, score, "final score should have been 0")
+}
+
+func BenchmarkScore(b *testing.B) {
+	frames := newFrameSlice(5, 10)
+	for n := 0; n < b.N; n++ {
+		Score(frames)
+	}
+}
