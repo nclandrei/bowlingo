@@ -1,13 +1,21 @@
 <form>
-<input name="firstRoll" [(ngModel)]="firstRoll" type="number" min="0" max="10"/>
-<input name="secondRoll" [(ngModel)]="secondRoll" type="number" min="0" max="10"/>
+  <div class="input-group roll-inputs">
+    <div class="input-group-prepend">
+      <span class="input-group-text">First and Second Roll</span>
+    </div>
+    <input name="firstRoll" [(ngModel)]="firstRoll" type="number" min="0" max="10">
+    <input name="secondRoll" [(ngModel)]="secondRoll" type="number" min="0" max="10">
+    <input name="bonusRoll" [(ngModel)]="bonusRoll" *ngIf="frames.length > 8" type="number" min="0" max="10">
+  </div>
 
-<button (click)="sendScores()">Submit</button>
-<button (click)="resetGame()">New Game</button>
+  <button *ngIf="frames.length < 10" (click)="sendScores()">Send Rolls</button>
+  <button (click)="resetGame()">New Game</button>
 </form>
 
-<li *ngFor="let frame of frames">
-  First Roll: {{ frame.firstRoll }}   ---   Second Roll: {{ frame.secondRoll }}
-</li>
+<div class="scores-container" >
+  <div class="score-box" *ngFor="let frame of frames">
+    {{ frame.firstRoll }} : {{ frame.secondRoll }}
+  </div>
+</div>
 
 <h1> Current Score: {{ totalScore }} </h1>

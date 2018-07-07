@@ -13,6 +13,7 @@ export class ScoreComponent implements OnInit {
   private totalScore = 0;
   private firstRoll: number;
   private secondRoll: number;
+  private bonusRoll = null;
 
   constructor(private scoreService: ScoreService) {}
 
@@ -22,12 +23,11 @@ export class ScoreComponent implements OnInit {
     const currentFrame: Frame = {
       firstRoll: this.firstRoll,
       secondRoll: this.secondRoll,
-      bonusRoll: null,
+      bonusRoll: this.bonusRoll,
     };
     this.frames.push(currentFrame);
     this.scoreService.sendFrames(this.frames)
       .subscribe((resp: any) => {
-        console.log(resp);
         this.totalScore = resp.score;
       });
   }
