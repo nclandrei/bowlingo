@@ -1,19 +1,70 @@
+@grid-border: 2px solid black;
+@large-margin: 50px;
+
+.bowlingo-btn-group {
+  margin-top: 15px;
+}
+
+.bowlingo-form {
+  margin-top: @large-margin;
+  margin-left: @large-margin;
+}
+
+.bowlingo-score {
+  margin-top: @large-margin;
+  margin-left: @large-margin;
+}
+
 .scores-container {
   display: flex;
   flex-flow: row nowrap;
   width: 2000px;
+  margin-left: @large-margin;
 }
 
 .score-box {
-  background: tomato;
-  padding: 5px;
-  width: 100px;
-  height: 50px;
-  margin-top: 10px;
+  background: rgb(250, 250, 214);
+  width: 150px;
+  height: 100px;
+  margin-top: @large-margin;
+
+  display: grid;
+  grid-template-rows: [r1] 30% [r2] 70%;
+  grid-template-columns: [c1] 33% [c2] 33% [c3] 33%;
+  align-items: center;
 
   line-height: 50px;
-  color: white;
+  color: black;
   font-weight: bold;
-  font-size: 1.5em;
+  font-size: 1em;
   text-align: center;
+}
+
+.frame-number {
+  grid-row: r1;
+  grid-column: c1 / span 3;
+  justify-self: stretch;
+  background: rgb(182, 182, 156);
+  border: @grid-border;
+}
+
+.first-roll {
+  grid-row: r2;
+  grid-column: c1;
+  border: @grid-border;
+  justify-self: stretch;
+}
+
+.second-roll {
+  grid-row: r2;
+  grid-column: c2;
+  justify-self: stretch;
+  border: @grid-border;
+}
+
+.bonus-roll {
+  grid-row: r2;
+  grid-column: c3;
+  justify-self: stretch;
+  border: @grid-border;
 }

@@ -1,21 +1,34 @@
-<form>
+<form class="bowlingo-form">
   <div class="input-group roll-inputs">
     <div class="input-group-prepend">
-      <span class="input-group-text">First and Second Roll</span>
+      <span class="input-group-text">Rolls</span>
     </div>
     <input name="firstRoll" [(ngModel)]="firstRoll" type="number" min="0" max="10">
     <input name="secondRoll" [(ngModel)]="secondRoll" type="number" min="0" max="10">
-    <input name="bonusRoll" [(ngModel)]="bonusRoll" *ngIf="frames.length > 8" type="number" min="0" max="10">
-  </div>
+    <input name="bonusRoll" [(ngModel)]="bonusRoll" *ngIf="isBonusRollAwarded()" type="number" min="0" max="10">
+    </div>
 
-  <button *ngIf="frames.length < 10" (click)="sendScores()">Send Rolls</button>
-  <button (click)="resetGame()">New Game</button>
+    <div class="btn-group bowlingo-btn-group" role="group">
+      <button class="btn btn-primary" *ngIf="frames.length < 10" (click)="sendScores()">Send Rolls</button>
+      <button class="btn btn-dark" (click)="resetGame()">New Game</button>
+    </div>
 </form>
 
 <div class="scores-container" >
-  <div class="score-box" *ngFor="let frame of frames">
-    {{ frame.firstRoll }} : {{ frame.secondRoll }}
+  <div class="score-box" *ngFor="let frame of frames; let i = index">
+    <div class="frame-number">
+      {{ i + 1 }}
+    </div>
+    <div class="first-roll">
+      {{ getRollText(0, frame) }}
+    </div>
+    <div class="second-roll">
+      {{ getRollText(1, frame) }}
+    </div>
+    <div class="bonus-roll" *ngIf="frames.length === 10">
+      {{ getRollText(2, frame) }}
+    </div>
   </div>
 </div>
 
-<h1> Current Score: {{ totalScore }} </h1>
+<h1 class="bowlingo-score"> Current Score: {{ totalScore }} </h1>
