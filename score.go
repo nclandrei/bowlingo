@@ -128,11 +128,9 @@ func newFrame(firstRoll, secondRoll int) Frame {
 func newFrameSlice(totalPinsPerFrame, noFrames int) []Frame {
 	frames := make([]Frame, noFrames)
 	for i := 0; i < noFrames; i++ {
-		firstRoll := totalPinsPerFrame
-		secondRoll := 0
 		frames[i] = Frame{
-			FirstRoll:  firstRoll,
-			SecondRoll: secondRoll,
+			FirstRoll:  totalPinsPerFrame,
+			SecondRoll: 0,
 		}
 	}
 	return frames
