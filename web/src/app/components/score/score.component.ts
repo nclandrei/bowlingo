@@ -10,7 +10,7 @@ import { ScoreService } from '../../services/score.service';
 export class ScoreComponent implements OnInit {
 
   private frames: Frame[] = [];
-  private totalScore: number;
+  private totalScore = 0;
   private firstRoll: number;
   private secondRoll: number;
 
