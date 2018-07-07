@@ -31,7 +31,7 @@ For the frontend to run, you can simply run (from the root folder):
 ```bash
 	$ cd web/
 	$ yarn
-	$ ng serve
+	$ yarn start
 ```
 
 ## How to test it
