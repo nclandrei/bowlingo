@@ -32,7 +32,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // the current score of the user.
 func (s *Server) ScoreHandler() http.Handler {
 	type Request struct {
-		Frames []Frame `json:"frames"`
+		Frames []Frame `json:"frames,omitempty"`
 	}
 	type Response struct {
 		Score int `json:"score"`
